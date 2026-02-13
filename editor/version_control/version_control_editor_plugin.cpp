@@ -143,6 +143,7 @@ void VersionControlEditorPlugin::_set_vcs_ui_state(bool p_enabled) {
 void VersionControlEditorPlugin::_set_credentials() {
 	CHECK_PLUGIN_INITIALIZED();
 
+	String blank = "";
 	String username = set_up_username->get_text();
 	String password = set_up_password->get_text();
 	String ssh_public_key = set_up_ssh_public_key_path->get_text();
@@ -157,8 +158,21 @@ void VersionControlEditorPlugin::_set_credentials() {
 			ssh_passphrase);
 
 	EditorSettings::get_singleton()->set_setting("version_control/username", username);
+	if (this->remember_password) {
+		EditorSettings::get_singleton()->set_setting("version_control/password", password);
+	}
+	else {
+		EditorSettings::get_singleton()->set_setting("version_control/password", blank);
+	}
 	EditorSettings::get_singleton()->set_setting("version_control/ssh_public_key_path", ssh_public_key);
 	EditorSettings::get_singleton()->set_setting("version_control/ssh_private_key_path", ssh_private_key);
+	if (this->remember_password) {
+		EditorSettings::get_singleton()->set_setting("version_control/ssh_passphrase", ssh_passphrase);
+	}
+	else {
+		EditorSettings::get_singleton()->set_setting("version_control/ssh_passphrase", blank);
+	}
+	EditorSettings::get_singleton()->set_setting("version_control/remember_password", this->remember_password);
 }
 
 bool VersionControlEditorPlugin::_load_plugin(const String &p_name) {
@@ -949,6 +963,7 @@ void VersionControlEditorPlugin::shut_down() {
 }
 
 VersionControlEditorPlugin::VersionControlEditorPlugin() {
+	this->remember_password = (bool)(EDITOR_GET("version_control/remember_password"));
 	singleton = this;
 
 	version_control_actions = memnew(PopupMenu);
@@ -1062,6 +1077,9 @@ VersionControlEditorPlugin::VersionControlEditorPlugin() {
 	set_up_password = memnew(LineEdit);
 	set_up_password->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	set_up_password->set_secret(true);
+	if (this->remember_password) {
+		set_up_password->set_text(EDITOR_GET("version_control/password"));
+	}
 	set_up_password->connect(SceneStringName(text_changed), callable_mp(this, &VersionControlEditorPlugin::_update_set_up_warning));
 	set_up_password_input->add_child(set_up_password);
 
@@ -1146,10 +1164,13 @@ VersionControlEditorPlugin::VersionControlEditorPlugin() {
 	set_up_ssh_passphrase = memnew(LineEdit);
 	set_up_ssh_passphrase->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	set_up_ssh_passphrase->set_secret(true);
+	if (this->remember_password) {
+		set_up_ssh_passphrase->set_text(EDITOR_GET("version_control/ssh_passphrase"));
+	}
 	set_up_ssh_passphrase->connect(SceneStringName(text_changed), callable_mp(this, &VersionControlEditorPlugin::_update_set_up_warning));
 	set_up_ssh_passphrase->set_accessibility_name(TTRC("SSH Passphrase"));
 	set_up_ssh_passphrase_input->add_child(set_up_ssh_passphrase);
-
+	
 	set_up_warning_text = memnew(Label);
 	set_up_warning_text->set_focus_mode(Control::FOCUS_ACCESSIBILITY);
 	set_up_warning_text->set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER);
