@@ -62,6 +62,8 @@ public:
 	};
 
 private:
+	bool remember_password = true;
+
 	static VersionControlEditorPlugin *singleton;
 
 	List<StringName> available_plugins;
@@ -70,6 +72,7 @@ private:
 	ConfirmationDialog *metadata_dialog = nullptr;
 	OptionButton *metadata_selection = nullptr;
 	AcceptDialog *set_up_dialog = nullptr;
+	CheckButton *set_up_remember_password = nullptr;
 	CheckButton *toggle_vcs_choice = nullptr;
 	OptionButton *set_up_choice = nullptr;
 	VBoxContainer *set_up_vbc = nullptr;
