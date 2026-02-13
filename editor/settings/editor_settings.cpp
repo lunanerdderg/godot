@@ -1115,8 +1115,11 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 
 	// Version control (VersionControlEditorPlugin)
 	_initial_set("version_control/username", "", true);
+	_initial_set("version_control/password", "");
 	_initial_set("version_control/ssh_public_key_path", "");
 	_initial_set("version_control/ssh_private_key_path", "");
+	_initial_set("version_control/ssh_passphrase", "");
+	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "version_control/remember_password", false, "")
 
 	/* Extra config */
 
