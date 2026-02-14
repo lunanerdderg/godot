@@ -1,4 +1,4 @@
-## *To access the "Remember Password" setting, go to Editor Settings -> Version Control, and enable Advanced Settings.*
+### *To access the "Remember Password" setting, go to Editor Settings -> Version Control, and enable Advanced Settings.*
 
 # Godot Engine
 
